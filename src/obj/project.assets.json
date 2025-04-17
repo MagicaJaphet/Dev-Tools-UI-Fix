@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\DevToolsUI.csproj",
+      "projectUniqueName": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\Dev-Tools-UI-Fix\\src\\DevToolsUI.csproj",
       "projectName": "DevToolsUI",
-      "projectPath": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\DevToolsUI.csproj",
+      "projectPath": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\Dev-Tools-UI-Fix\\src\\DevToolsUI.csproj",
       "packagesPath": "C:\\Users\\linda\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\obj\\",
+      "outputPath": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\Dev-Tools-UI-Fix\\src\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\linda\\AppData\\Roaming\\NuGet\\NuGet.Config",

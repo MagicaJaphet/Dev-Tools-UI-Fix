@@ -7,3 +7,13 @@ C:\Users\linda\OneDrive\Documents\Rain Mods\DevToolsUIFix\src\obj\Debug\DevTools
 C:\Users\linda\OneDrive\Documents\Rain Mods\DevToolsUIFix\src\obj\Debug\DevToolsUI.csproj.CoreCompileInputs.cache
 C:\Users\linda\OneDrive\Documents\Rain Mods\DevToolsUIFix\src\obj\Debug\DevToolsUI.dll
 C:\Users\linda\OneDrive\Documents\Rain Mods\DevToolsUIFix\src\obj\Debug\DevToolsUI.pdb
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\mod\newest\plugins\DevToolsUI.dll
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\mod\newest\plugins\DevToolsUI.pdb
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\src\obj\Debug\DevToolsUI.csproj.AssemblyReference.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\src\obj\Debug\DevToolsUI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\src\obj\Debug\DevToolsUI.AssemblyInfoInputs.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\src\obj\Debug\DevToolsUI.AssemblyInfo.cs
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\src\obj\Debug\DevToolsUI.csproj.CoreCompileInputs.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\src\obj\Debug\DevToolsUI.sourcelink.json
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\src\obj\Debug\DevToolsUI.dll
+C:\Users\linda\OneDrive\Documents\Rain Mods\Dev-Tools-UI-Fix\src\obj\Debug\DevToolsUI.pdb

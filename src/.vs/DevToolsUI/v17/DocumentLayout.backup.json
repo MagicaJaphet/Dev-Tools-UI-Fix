@@ -1,10 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\",
+  "WorkspaceRootPath": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\Dev-Tools-UI-Fix\\src\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{34CCAFBF-2DDB-4D1D-B403-E75BF5E76794}|JollyVoidSeaFix.csproj|c:\\users\\linda\\onedrive\\documents\\rain mods\\devtoolsuifix\\src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{34CCAFBF-2DDB-4D1D-B403-E75BF5E76794}|JollyVoidSeaFix.csproj|solutionrelative:plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{34CCAFBF-2DDB-4D1D-B403-E75BF5E76794}|DevToolsUI.csproj|c:\\users\\linda\\onedrive\\documents\\rain mods\\dev-tools-ui-fix\\src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34CCAFBF-2DDB-4D1D-B403-E75BF5E76794}|DevToolsUI.csproj|solutionrelative:plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -24,11 +24,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Plugin.cs",
-              "DocumentMoniker": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\Plugin.cs",
+              "DocumentMoniker": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\Dev-Tools-UI-Fix\\src\\Plugin.cs",
               "RelativeDocumentMoniker": "Plugin.cs",
-              "ToolTip": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\Plugin.cs",
+              "ToolTip": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\Dev-Tools-UI-Fix\\src\\Plugin.cs",
               "RelativeToolTip": "Plugin.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAowFwAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAIIAAAAAAAAAAAAcwKcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-31T02:09:21.932Z",
               "EditorCaption": ""

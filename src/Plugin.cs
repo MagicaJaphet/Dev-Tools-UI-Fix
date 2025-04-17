@@ -42,6 +42,7 @@ sealed class Plugin : BaseUnityPlugin
 
 		try
 		{
+			On.DevInterface.Button.Update += Button_Update;
 			On.DevInterface.Panel.ctor += Panel_ctor;
 			_ = new Hook(typeof(RectangularDevUINode).GetProperty(nameof(RectangularDevUINode.MouseOver), BindingFlags.Public | BindingFlags.Instance).GetGetMethod(), (Func<RectangularDevUINode, bool> orig, RectangularDevUINode self) =>
 			{
@@ -60,6 +61,14 @@ sealed class Plugin : BaseUnityPlugin
 			UnityEngine.Debug.LogException(ex);
 		}
     }
+
+	private void Button_Update(On.DevInterface.Button.orig_Update orig, Button self)
+	{
+		if (self is SwitchPageButton && self.parentNode != null && self.parentNode.subNodes.Any(x => (x is Panel panel && panel.MouseOver) || x.subNodes.Any(x => x is Panel panel && panel.MouseOver)))
+			return;
+
+		orig(self);
+	}
 
 	private void Panel_ctor(On.DevInterface.Panel.orig_ctor orig, Panel self, DevUI owner, string IDstring, DevUINode parentNode, Vector2 pos, Vector2 size, string title)
 	{

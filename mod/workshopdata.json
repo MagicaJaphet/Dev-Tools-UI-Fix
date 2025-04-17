@@ -1,6 +1,6 @@
 {
   "Title": "Dev Tools UI Fix",
-  "Description": "Aims to make Dev Tools bareable to use because we can\u0027t live with a decade old debug tool.",
+  "Description": "Aims to make Dev Tools bareable to use because we can\u0027t live with a decade old debug tool.\r\n\r\n[h2]NEW KEYBINDS[/h2]\r\n[list]\r\n[*]Hold Left Shift \u002B Drag: Move Panels without needing to hover over the move panel button\r\n[*]Hold Left Ctrl \u002B Click: Minimize Panels without needing to hover over the minimize button\r\n[/list]\r\n\r\n[h2]QOL CHANGES[/h2]\r\n[list]\r\n[*]Fixes panels overlapping with each other, causing accidental button presses\r\n[/list]",
   "ID": "magica.devtoolsuifix",
   "Version": "0.1.0",
   "TargetGameVersion": "v1.9.06",
@@ -14,5 +14,5 @@
   ],
   "WorkshopID": 3465302751,
   "UploadFilesOnly": false,
-  "UploadThumbnail": true
+  "UploadThumbnail": false
 }
