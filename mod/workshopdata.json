@@ -1,0 +1,18 @@
+{
+  "Title": "Dev Tools UI Fix",
+  "Description": "Aims to make Dev Tools bareable to use because we can\u0027t live with a decade old debug tool.",
+  "ID": "magica.devtoolsuifix",
+  "Version": "0.1.0",
+  "TargetGameVersion": "v1.9.06",
+  "Requirements": "",
+  "RequirementNames": "",
+  "Authors": "MagicaJaphet",
+  "Visibility": "Public",
+  "Tags": [
+    "Accessibility",
+    "Tools"
+  ],
+  "WorkshopID": 3465302751,
+  "UploadFilesOnly": false,
+  "UploadThumbnail": true
+}

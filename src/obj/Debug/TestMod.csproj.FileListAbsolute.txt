@@ -1,0 +1,9 @@
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\mod\newest\plugins\TestMod.dll
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\mod\newest\plugins\TestMod.pdb
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\TestMod.csproj.AssemblyReference.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\TestMod.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\TestMod.AssemblyInfoInputs.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\TestMod.AssemblyInfo.cs
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\TestMod.csproj.CoreCompileInputs.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\TestMod.dll
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\TestMod.pdb

@@ -1,0 +1,51 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{34CCAFBF-2DDB-4D1D-B403-E75BF5E76794}|JollyVoidSeaFix.csproj|c:\\users\\linda\\onedrive\\documents\\rain mods\\devtoolsuifix\\src\\plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{34CCAFBF-2DDB-4D1D-B403-E75BF5E76794}|JollyVoidSeaFix.csproj|solutionrelative:plugin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Plugin.cs",
+              "DocumentMoniker": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\Plugin.cs",
+              "RelativeDocumentMoniker": "Plugin.cs",
+              "ToolTip": "C:\\Users\\linda\\OneDrive\\Documents\\Rain Mods\\DevToolsUIFix\\src\\Plugin.cs",
+              "RelativeToolTip": "Plugin.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAowFwAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-31T02:09:21.932Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 190,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

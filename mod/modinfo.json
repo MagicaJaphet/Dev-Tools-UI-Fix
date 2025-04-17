@@ -1,0 +1,11 @@
+﻿{
+  "id": "magica.devtoolsuifix",
+  "name": "Dev Tools UI Fix",
+  "version": "0.1.0",
+  "authors": "MagicaJaphet",
+  "description": "Aims to make Dev Tools bareable to use because we can't live with a decade old debug tool.",
+  "tags": [],
+  "requirements": [],
+  "requirements_names": [],
+  "checksum_override_version": false
+}

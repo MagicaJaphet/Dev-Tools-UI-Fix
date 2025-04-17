@@ -1,0 +1,9 @@
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\mod\newest\plugins\ShadierCitadel.dll
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\mod\newest\plugins\ShadierCitadel.pdb
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\ShadierCitadel.csproj.AssemblyReference.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\ShadierCitadel.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\ShadierCitadel.AssemblyInfoInputs.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\ShadierCitadel.AssemblyInfo.cs
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\ShadierCitadel.csproj.CoreCompileInputs.cache
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\ShadierCitadel.dll
+C:\Users\linda\OneDrive\Documents\Rain Mods\TemplateMod-master\src\obj\Debug\ShadierCitadel.pdb
