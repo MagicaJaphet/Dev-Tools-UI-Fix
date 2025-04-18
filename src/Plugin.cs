@@ -27,6 +27,9 @@ sealed class Plugin : BaseUnityPlugin
 	bool IsInit;
 
 	public static ConditionalWeakTable<Panel, PanelValues> panelCWT = new();
+	internal static Dictionary<Type, List<PlacedObjectRepresentation>> placedObjs = [];
+	private static int priority;
+	internal static List<Panel> panelNodes = [];
 
 	public void OnEnable()
     {
@@ -43,6 +46,10 @@ sealed class Plugin : BaseUnityPlugin
 
 		try
 		{
+			On.DevInterface.Handle.Update += Handle_Update;
+			On.DevInterface.SwitchPageButton.Clicked += SwitchPageButton_Clicked;
+			On.DevInterface.ObjectsPage.RemoveObject += ObjectsPage_RemoveObject;
+			IL.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
 			On.DevInterface.Button.Update += Button_Update;
 			On.DevInterface.Panel.ctor += Panel_ctor;
 			_ = new Hook(typeof(RectangularDevUINode).GetProperty(nameof(RectangularDevUINode.MouseOver), BindingFlags.Public | BindingFlags.Instance).GetGetMethod(), (Func<RectangularDevUINode, bool> orig, RectangularDevUINode self) =>
@@ -63,9 +70,76 @@ sealed class Plugin : BaseUnityPlugin
 		}
     }
 
+	private void ObjectsPage_RemoveObject(On.DevInterface.ObjectsPage.orig_RemoveObject orig, ObjectsPage self, PlacedObjectRepresentation objRep)
+	{
+		if (placedObjs.ContainsKey(objRep.GetType()) && placedObjs[objRep.GetType()].Contains(objRep))
+		{
+			placedObjs[objRep.GetType()].Remove(objRep);
+			if (placedObjs[objRep.GetType()].Count == 0)
+			{
+				placedObjs.Remove(objRep.GetType());
+			}
+		}
+
+		if (objRep.subNodes.Any(x => x is Panel pan && panelNodes.Contains(x)))
+			objRep.subNodes.Where(x => x is Panel).ToList().ForEach(x => panelNodes.Remove((Panel)x));
+
+		orig(self, objRep);
+	}
+
+	private void Handle_Update(On.DevInterface.Handle.orig_Update orig, Handle self)
+	{
+		orig(self);
+
+		PlacedObjectRepresentation parent = self.parentNode is PlacedObjectRepresentation p ? p : self is PlacedObjectRepresentation a ? a : null;
+		if (!self.MouseOver && !self.dragged && parent != null && placedObjs.ContainsKey(parent.GetType()) && placedObjs[parent.GetType()].Contains(parent))
+		{
+			float hue = Mathf.Lerp(0f, 1f, (float)(placedObjs[parent.GetType()].IndexOf(parent) * 1f) / (float)placedObjs[parent.GetType()].Count);
+			self.SetColor(Custom.HSL2RGB(hue, 1f, 0.8f));
+		}
+	}
+
+	private void SwitchPageButton_Clicked(On.DevInterface.SwitchPageButton.orig_Clicked orig, SwitchPageButton self)
+	{
+		placedObjs.Clear();
+		panelNodes.Clear();
+		priority = 0;
+		orig(self);
+	}
+
+	private void ObjectsPage_CreateObjRep(ILContext il)
+	{
+		try
+		{
+			ILCursor cursor = new(il);
+
+			cursor.GotoNext(MoveType.After,
+				x => x.MatchStfld<PlacedObject>(nameof(PlacedObject.pos)));
+
+			cursor.Emit(OpCodes.Ldarg_0);
+			cursor.Emit(OpCodes.Ldarg_2);
+			static void ReplaceObjPos(ObjectsPage self, PlacedObject pObj)
+			{
+				if (pObj.pos.x < 0f)
+				{
+					pObj.pos.x = 10f;
+				}
+				if (pObj.pos.y < 0f)
+				{
+					pObj.pos.y = 10f;
+				}
+			}
+			cursor.EmitDelegate(ReplaceObjPos);
+		}
+		catch (Exception ex)
+		{
+			UnityEngine.Debug.LogException(ex);
+		}
+	}
+
 	private void Button_Update(On.DevInterface.Button.orig_Update orig, Button self)
 	{
-		if (self is SwitchPageButton && self.parentNode != null && self.parentNode.subNodes.Any(x => (x is Panel panel && panel.MouseOver) || x.subNodes.Any(x => x is Panel panel && panel.MouseOver)))
+		if (self is SwitchPageButton && self.parentNode != null && self.parentNode.subNodes.Any(x => (x is Panel panel && panel.MouseOver) || x.subNodes.Any(x => x is Panel panel && panel.MouseOver) || (x is Handle handle && handle.MouseOver) || x.subNodes.Any(x => x is Handle handle && handle.MouseOver)))
 			return;
 
 		orig(self);
@@ -78,7 +152,9 @@ sealed class Plugin : BaseUnityPlugin
 		PanelValues values = panelCWT.GetOrCreateValue(self);
 		if (values != null)
 		{
-			values.priority = self.Page.subNodes.Count;
+			priority++;
+			values.priority = priority;
+			panelNodes.Add(self);
 		}
 	}
 
@@ -100,7 +176,7 @@ sealed class Plugin : BaseUnityPlugin
 			cursor.Emit(OpCodes.Ldarg_0);
 			static bool ShouldUpdateNodes(Panel panel)
 			{
-				return panel.IsPanelOnTop() && !Input.GetKey(KeyCode.LeftShift);
+				return (panel.IsPanelOnTop() || panel.subNodes.Any(x => x is Panel pan && pan.IsPanelOnTop())) && !Input.GetKey(KeyCode.LeftShift);
 			}
 			cursor.EmitDelegate(ShouldUpdateNodes);
 			cursor.Emit(OpCodes.Brfalse, next);
@@ -114,6 +190,18 @@ sealed class Plugin : BaseUnityPlugin
 				panel.fSprites[0].color = Color.black;
 				if (panel.IsPanelOnTop() || panel.dragged)
 				{
+					if (panel.MouseOver && panel.owner.mouseClick && panelCWT.TryGetValue(panel, out var value))
+					{
+						panel.fSprites.ForEach(x => x.MoveToFront());
+						panel.fLabels.ForEach(x => x.MoveToFront());
+						panel.subNodes.ForEach(x => x.fSprites.ForEach((x) => x.MoveToFront()));
+						panel.subNodes.ForEach(x => x.fLabels.ForEach((x) => x.MoveToFront()));
+						panel.subNodes.ForEach(x => x.subNodes.ForEach(x => x.fSprites.ForEach((x) => x.MoveToFront())));
+						panel.subNodes.ForEach(x => x.subNodes.ForEach(x => x.fLabels.ForEach((x) => x.MoveToFront())));
+						priority++;
+						value.priority = priority;
+					}
+
 					if (panel.owner != null && panel.MouseOver && Input.GetKey(KeyCode.LeftShift) && !panel.dragged)
 					{
 						panel.fSprites[0].color = Color.red;
@@ -136,6 +224,11 @@ sealed class Plugin : BaseUnityPlugin
 							panel.ToggleCollapse();
 					}
 				}
+				if (panel.MoreThanOneOfSameTypeExists() && panel.parentNode is PlacedObjectRepresentation rep && placedObjs.ContainsKey(rep.GetType()) && placedObjs[rep.GetType()].Contains(rep) && !panel.dragged)
+				{
+					float hue = Mathf.Lerp(0f, 1f, (float)(placedObjs[rep.GetType()].IndexOf(rep) * 1f) / (float)placedObjs[rep.GetType()].Count);
+					panel.fSprites[0].color = Custom.HSL2RGB(hue, 1f, 0.2f);
+				}
 			}
 			cursor.EmitDelegate(HandleCaseIfHovered);
 			cursor.Emit(OpCodes.Ldarg_0);
@@ -152,6 +245,7 @@ sealed class Plugin : BaseUnityPlugin
 	}
 }
 
+
 public static class ExtensionValues
 {
 	public static bool IsPanelOnTop(this Panel panel)
@@ -159,10 +253,35 @@ public static class ExtensionValues
 		if (panel.Page == null && !panel.Page.subNodes.Any(x => x is Panel || x.subNodes.Any(x => x is Panel)))
 			return false;
 
-		Panel[] panelNode = panel.Page != null && panel.Page.subNodes.Any(x => x is Panel || x.subNodes.Any(x => x is Panel)) ? panel.Page.subNodes.Where(x => (x is Panel pen && pen.MouseOver) || (x.subNodes.Any(x => x is Panel pan && pan.MouseOver))).SelectMany(x => x is Panel panel2 ? [panel2] : x.subNodes.Where(x => x is Panel).Select(x => x as Panel)).ToArray() : null;
+		if (panel.Page.subNodes.Any(x => (x is Handle handle && handle.MouseOver) || x.subNodes.Any(x => x is Handle handle && handle.MouseOver)))
+			return false;
 
-		return (panelNode == null) ||
-			(panel.MouseOver && panelNode != null && panelNode.Where(x => x.MouseOver).Count() <= 1) ||
-			(panelNode != null && Plugin.panelCWT.TryGetValue(panel, out var values) && panelNode.Where(x => Plugin.panelCWT.TryGetValue(x, out var compare) && values.priority < compare.priority && x.MouseOver).Count() <= 0);
+		return (Plugin.panelNodes == null) ||
+			(panel.MouseOver && Plugin.panelNodes != null && Plugin.panelNodes.Where(x => x != null && x.MouseOver).Count() <= 1) ||
+			(Plugin.panelNodes != null && Plugin.panelCWT.TryGetValue(panel, out var values) && Plugin.panelNodes.Where(x => x != null && Plugin.panelCWT.TryGetValue(x, out var compare) && values.priority < compare.priority && x.MouseOver).Count() <= 0);
+	}
+
+	public static bool MoreThanOneOfSameTypeExists(this Panel panel)
+	{
+
+		if (panel.parentNode != null && panel.parentNode is PlacedObjectRepresentation rep && Plugin.placedObjs.ContainsKey(rep.GetType()) && Plugin.placedObjs[rep.GetType()].Contains(rep))
+		{
+			return true;
+		}
+		else if (panel.Page != null && panel.parentNode != null && panel.parentNode is PlacedObjectRepresentation rep2 && panel.Page.subNodes.Where(x => x is PlacedObjectRepresentation && x.GetType() == panel.parentNode.GetType()).Count() > 1)
+		{
+			if (!Plugin.placedObjs.ContainsKey(rep2.GetType()))
+			{
+				Plugin.placedObjs.Add(rep2.GetType(), []);
+			}
+			Plugin.placedObjs[rep2.GetType()].Add(rep2);
+		}
+
+		return false;
+	}
+
+	public static bool IsPanelOffscreen(this Panel panel)
+	{
+		return panel.absPos.x < 0f || panel.absPos.y < 0f || panel.absPos.x > Custom.rainWorld.options.ScreenSize.x || panel.absPos.x > Custom.rainWorld.options.ScreenSize.y;
 	}
 }
