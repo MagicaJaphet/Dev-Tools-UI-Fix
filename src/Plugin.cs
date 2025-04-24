@@ -176,7 +176,7 @@ sealed class Plugin : BaseUnityPlugin
 			cursor.Emit(OpCodes.Ldarg_0);
 			static bool ShouldUpdateNodes(Panel panel)
 			{
-				return (panel.IsPanelOnTop() || panel.subNodes.Any(x => x is Panel pan && pan.IsPanelOnTop())) && !Input.GetKey(KeyCode.LeftShift);
+				return (panel.IsPanelOnTop() || panel.subNodes.Any(x => (x is Panel pan && pan.IsPanelOnTop()) || (x is Handle handle && handle.MouseOver) )) && !Input.GetKey(KeyCode.LeftShift);
 			}
 			cursor.EmitDelegate(ShouldUpdateNodes);
 			cursor.Emit(OpCodes.Brfalse, next);
