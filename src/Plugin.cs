@@ -8,6 +8,7 @@ using RWCustom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Permissions;
@@ -20,29 +21,33 @@ using UnityEngine;
 
 namespace DevToolsUI;
 
-[BepInPlugin("magica.devtoolsuifix", "Dev Tools UI Fix", "0.1.0")]
+[BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
 sealed class Plugin : BaseUnityPlugin
 {
-    public static new ManualLogSource Logger;
+	public const string PLUGIN_GUID = "magica.devtoolsuifix";
+	public const string PLUGIN_NAME = "Dev Tools UI Fix"; 
+	public const string PLUGIN_VERSION = "0.1.0"; 
+	public static new ManualLogSource Logger;
 	bool IsInit;
 
 	public static ConditionalWeakTable<Panel, PanelValues> panelCWT = new();
 	internal static Dictionary<Type, List<PlacedObjectRepresentation>> placedObjs = [];
 	private static int priority;
 	internal static List<Panel> panelNodes = [];
+	internal static Dictionary<RoomSettings.RoomEffect.Type, Type> roomEffects = [];
 
 	public void OnEnable()
-    {
-        Logger = base.Logger;
-        On.RainWorld.OnModsInit += OnModsInit;
-    }
+	{
+		Logger = base.Logger;
+		On.RainWorld.OnModsInit += OnModsInit;
+	}
 
-    private void OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
-    {
-        orig(self);
+	private void OnModsInit(On.RainWorld.orig_OnModsInit orig, RainWorld self)
+	{
+		orig(self);
 
-        if (IsInit) return;
-        IsInit = true;
+		if (IsInit) return;
+		IsInit = true;
 
 		try
 		{
@@ -68,7 +73,7 @@ sealed class Plugin : BaseUnityPlugin
 		{
 			UnityEngine.Debug.LogException(ex);
 		}
-    }
+	}
 
 	private void ObjectsPage_RemoveObject(On.DevInterface.ObjectsPage.orig_RemoveObject orig, ObjectsPage self, PlacedObjectRepresentation objRep)
 	{
@@ -84,6 +89,29 @@ sealed class Plugin : BaseUnityPlugin
 		if (objRep.subNodes.Any(x => x is Panel pan && panelNodes.Contains(x)))
 			objRep.subNodes.Where(x => x is Panel).ToList().ForEach(x => panelNodes.Remove((Panel)x));
 
+		// Removes any lingering sprites and such from placed objects
+		objRep.fSprites.ForEach(x => x?.RemoveFromContainer());
+		objRep.subNodes.ForEach(x => x.fSprites.ForEach(x => x?.RemoveFromContainer()));
+		objRep.subNodes.ForEach(x => x.subNodes.ForEach(x => x.fSprites.ForEach(x => x?.RemoveFromContainer())));
+
+		List<FieldInfo> fields = [.. objRep.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance)];
+		fields.AddRange(objRep.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance));
+		foreach (var field in fields)
+		{
+			if (field.FieldType.BaseType != null)
+			{
+				if (objRep.owner != null && objRep.owner.room != null)
+				{
+					// TODO: Fix cosmetic sprites as well
+					if (field.FieldType.GetInterfaces().Contains(typeof(IDrawable)))
+					{
+						UnityEngine.Debug.Log("Attempting to remove spriteleaser...");
+						RoomCamera.SpriteLeaser currentLeaser = objRep.owner.room.game.cameras[0].spriteLeasers.Where(x => x.drawableObject == field.GetValue(objRep)).FirstOrDefault();
+						currentLeaser?.CleanSpritesAndRemove();
+					}
+				}
+			}
+		}
 		orig(self, objRep);
 	}
 
