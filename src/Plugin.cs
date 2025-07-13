@@ -57,6 +57,7 @@ sealed class Plugin : BaseUnityPlugin
 			IL.DevInterface.ObjectsPage.CreateObjRep += ObjectsPage_CreateObjRep;
 			On.DevInterface.Button.Update += Button_Update;
 			On.DevInterface.Panel.ctor += Panel_ctor;
+			On.DevInterface.DevUINode.ClearSprites += DevUINode_ClearSprites;
 			_ = new Hook(typeof(RectangularDevUINode).GetProperty(nameof(RectangularDevUINode.MouseOver), BindingFlags.Public | BindingFlags.Instance).GetGetMethod(), (Func<RectangularDevUINode, bool> orig, RectangularDevUINode self) =>
 			{
 				if (self is Panel panel)
@@ -72,6 +73,16 @@ sealed class Plugin : BaseUnityPlugin
 		catch (Exception ex)
 		{
 			UnityEngine.Debug.LogException(ex);
+		}
+	}
+
+	private void DevUINode_ClearSprites(On.DevInterface.DevUINode.orig_ClearSprites orig, DevUINode self)
+	{
+		orig(self);
+
+		if (self is Panel panel && panelNodes.Contains(panel))
+		{
+			panelNodes.Remove(panel);
 		}
 	}
 
@@ -204,7 +215,7 @@ sealed class Plugin : BaseUnityPlugin
 			cursor.Emit(OpCodes.Ldarg_0);
 			static bool ShouldUpdateNodes(Panel panel)
 			{
-				return (panel.IsPanelOnTop() || panel.subNodes.Any(x => (x is Panel pan && pan.IsPanelOnTop()) || (x is Handle handle && handle.MouseOver) )) && !Input.GetKey(KeyCode.LeftShift);
+				return (panelCWT.TryGetValue(panel, out var values) && !values.frameUpdate) || (panel.IsPanelOnTop() || panel.subNodes.Any(x => (x is Panel pan && (pan.IsPanelOnTop() || pan.subNodes.Any(x => x is Panel pan2 && pan2.IsPanelOnTop()))) || (x is Handle handle && handle.MouseOver) )) && !Input.GetKey(KeyCode.LeftShift);
 			}
 			cursor.EmitDelegate(ShouldUpdateNodes);
 			cursor.Emit(OpCodes.Brfalse, next);
@@ -218,16 +229,21 @@ sealed class Plugin : BaseUnityPlugin
 				panel.fSprites[0].color = Color.black;
 				if (panel.IsPanelOnTop() || panel.dragged)
 				{
-					if (panel.MouseOver && panel.owner.mouseClick && panelCWT.TryGetValue(panel, out var value))
+					if (panelCWT.TryGetValue(panel, out var value))
 					{
-						panel.fSprites.ForEach(x => x.MoveToFront());
-						panel.fLabels.ForEach(x => x.MoveToFront());
-						panel.subNodes.ForEach(x => x.fSprites.ForEach((x) => x.MoveToFront()));
-						panel.subNodes.ForEach(x => x.fLabels.ForEach((x) => x.MoveToFront()));
-						panel.subNodes.ForEach(x => x.subNodes.ForEach(x => x.fSprites.ForEach((x) => x.MoveToFront())));
-						panel.subNodes.ForEach(x => x.subNodes.ForEach(x => x.fLabels.ForEach((x) => x.MoveToFront())));
-						priority++;
-						value.priority = priority;
+						value.frameUpdate = true;
+
+						if (panel.MouseOver && panel.owner.mouseClick)
+						{
+							panel.fSprites.ForEach(x => x.MoveToFront());
+							panel.fLabels.ForEach(x => x.MoveToFront());
+							panel.subNodes.ForEach(x => x.fSprites.ForEach((x) => x.MoveToFront()));
+							panel.subNodes.ForEach(x => x.fLabels.ForEach((x) => x.MoveToFront()));
+							panel.subNodes.ForEach(x => x.subNodes.ForEach(x => x.fSprites.ForEach((x) => x.MoveToFront())));
+							panel.subNodes.ForEach(x => x.subNodes.ForEach(x => x.fLabels.ForEach((x) => x.MoveToFront())));
+							priority++;
+							value.priority = priority;
+						}
 					}
 
 					if (panel.owner != null && panel.MouseOver && Input.GetKey(KeyCode.LeftShift) && !panel.dragged)
@@ -270,6 +286,7 @@ sealed class Plugin : BaseUnityPlugin
 	public class PanelValues
 	{
 		public int priority;
+		public bool frameUpdate = false;
 	}
 }
 
@@ -278,7 +295,7 @@ public static class ExtensionValues
 {
 	public static bool IsPanelOnTop(this Panel panel)
 	{
-		if (panel.Page == null && !panel.Page.subNodes.Any(x => x is Panel || x.subNodes.Any(x => x is Panel)))
+		if (panel.Page == null && !panel.Page.subNodes.Any(x => x is Panel || x.subNodes.Any(x => x is Panel || x.subNodes.Any(x => x is Panel))))
 			return false;
 
 		if (panel.Page.subNodes.Any(x => (x is Handle handle && handle.MouseOver) || x.subNodes.Any(x => x is Handle handle && handle.MouseOver)))
@@ -306,10 +323,5 @@ public static class ExtensionValues
 		}
 
 		return false;
-	}
-
-	public static bool IsPanelOffscreen(this Panel panel)
-	{
-		return panel.absPos.x < 0f || panel.absPos.y < 0f || panel.absPos.x > Custom.rainWorld.options.ScreenSize.x || panel.absPos.x > Custom.rainWorld.options.ScreenSize.y;
 	}
 }
